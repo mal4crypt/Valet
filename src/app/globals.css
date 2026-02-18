@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply border-border;
+}
+
+html {
+  @apply scroll-smooth;
+}
+
+body {
+  @apply bg-white text-neutral-900 antialiased;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s ease-in-out;
+}
+
+/* Utilities */
+.transition-all-smooth {
+  @apply transition-all duration-200 ease-in-out;
+}
