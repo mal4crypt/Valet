@@ -1,12 +1,12 @@
+const path = require('path');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    path.join(__dirname, './src/**/*.{js,ts,jsx,tsx,mdx}'),
+    path.join(__dirname, './src/app/**/*.{js,ts,jsx,tsx,mdx}'),
+    path.join(__dirname, './src/components/**/*.{js,ts,jsx,tsx,mdx}'),
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -29,9 +29,6 @@ module.exports = {
         'xl': '0.75rem',
         '2xl': '1rem',
         '3xl': '1.5rem',
-      },
-      animation: {
-        'shimmer': 'shimmer 2s infinite',
       },
     },
   },
