@@ -2,48 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  @apply border-border;
+@layer base {
+  :root {
+    --background: 210 40% 98%; /* gray-50 equivalent */
+    --foreground: 222 47% 11%; /* slate-900 equivalent */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --primary: 221 83% 53%; /* blue-500 equivalent */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 214 32% 91%;
+    --muted-foreground: 215 16% 47%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 222 84% 4.9%;
+    --radius: 0.75rem;
+  }
+
+  body {
+    @apply bg-[#F8FAFC] text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900;
+  }
 }
 
-html {
-  @apply scroll-smooth;
+@layer components {
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+
+  .shimmer {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent;
+  }
 }
 
-body {
-  @apply bg-white text-neutral-900 antialiased;
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
-/* Animations */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-in-out;
+.animate-in {
+  animation: fadeIn 0.4s ease-out, slideUp 0.4s ease-out;
 }
 
-.animate-slideUp {
-  animation: slideUp 0.3s ease-in-out;
-}
-
-/* Utilities */
-.transition-all-smooth {
-  @apply transition-all duration-200 ease-in-out;
-}

@@ -10,7 +10,7 @@ import {
   Button,
   Alert,
   SkeletonLoader,
-} from '@/components/ui/form';
+} from '@/components/ui'; // Consolidated import
 
 interface PlannerFormProps {
   onSubmit: (input: PlannerInput) => Promise<void>;
@@ -65,11 +65,20 @@ export function PlannerForm({ onSubmit, isLoading, error, onClearError }: Planne
   };
 
   if (isLoading) {
-    return <SkeletonLoader />;
+    return (
+      <div className="space-y-6">
+        <div className="p-1 bg-slate-100/50 rounded-xl overflow-hidden">
+          <SkeletonLoader />
+        </div>
+        <p className="text-center text-sm text-slate-400 animate-pulse">
+          Crafting your strategic roadmap...
+        </p>
+      </div>
+    );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8 animate-in">
       {/* Error Alert */}
       {error && (
         <Alert
@@ -79,113 +88,112 @@ export function PlannerForm({ onSubmit, isLoading, error, onClearError }: Planne
         />
       )}
 
-      {/* Target Role */}
-      <InputField
-        id="targetRole"
-        label="What is your target role?"
-        placeholder="e.g., Backend Engineer, Data Scientist, Product Manager"
-        value={formData.targetRole || ''}
-        onChange={(value) => handleFieldChange('targetRole', value)}
-        error={errors.targetRole}
-        required
-      />
+      <div className="space-y-6">
+        {/* Target Role */}
+        <InputField
+          id="targetRole"
+          label="What is your target role?"
+          placeholder="e.g., Backend Engineer, Data Scientist"
+          helperText="The specific career position you are aiming for."
+          value={formData.targetRole || ''}
+          onChange={(value) => handleFieldChange('targetRole', value)}
+          error={errors.targetRole}
+          required
+        />
 
-      {/* Skill Level */}
-      <SelectField
-        id="skillLevel"
-        label="Current skill level"
-        value={formData.skillLevel || ''}
-        onChange={(value) => handleFieldChange('skillLevel', value)}
-        options={[
-          { value: 'Beginner', label: 'Beginner — Less than 1 year experience' },
-          { value: 'Intermediate', label: 'Intermediate — 1-3 years experience' },
-          { value: 'Advanced', label: 'Advanced — 3+ years experience' },
-        ]}
-        error={errors.skillLevel}
-        required
-      />
+        {/* Skill Level */}
+        <SelectField
+          id="skillLevel"
+          label="Current skill level"
+          value={formData.skillLevel || ''}
+          onChange={(value) => handleFieldChange('skillLevel', value)}
+          options={[
+            { value: 'Beginner', label: 'Beginner — Entry level' },
+            { value: 'Intermediate', label: 'Intermediate — 1-3 years' },
+            { value: 'Advanced', label: 'Advanced — Senior level' },
+          ]}
+          error={errors.skillLevel}
+          required
+        />
 
-      {/* Existing Skills */}
-      <TextAreaField
-        id="existingSkills"
-        label="What skills do you already have? (optional)"
-        placeholder="e.g., Python, JavaScript, SQL, problem-solving..."
-        value={formData.existingSkills || ''}
-        onChange={(value) => handleFieldChange('existingSkills', value)}
-        error={errors.existingSkills}
-        rows={3}
-      />
+        {/* Weekly Hours */}
+        <InputField
+          id="weeklyHours"
+          label="Weekly commitment (Hours)"
+          type="number"
+          placeholder="e.g., 20"
+          helperText="How many hours can you dedicate to execution?"
+          value={formData.weeklyHours || ''}
+          onChange={(value) => handleFieldChange('weeklyHours', value)}
+          error={errors.weeklyHours}
+          required
+        />
 
-      {/* Weekly Hours */}
-      <InputField
-        id="weeklyHours"
-        label="How many hours per week can you dedicate?"
-        type="number"
-        placeholder="e.g., 10, 20, 40"
-        value={formData.weeklyHours || ''}
-        onChange={(value) => handleFieldChange('weeklyHours', value)}
-        error={errors.weeklyHours}
-        required
-      />
+        {/* Timeframe */}
+        <SelectField
+          id="timeframe"
+          label="Engagement Timeframe"
+          value={formData.timeframe || ''}
+          onChange={(value) => handleFieldChange('timeframe', value)}
+          options={[
+            { value: '3 months', label: '3 months — Accelerated' },
+            { value: '6 months', label: '6 months — Standard' },
+            { value: '1 year', label: '1 year — Deep mastery' },
+          ]}
+          error={errors.timeframe}
+          required
+        />
 
-      {/* Timeframe */}
-      <SelectField
-        id="timeframe"
-        label="What is your target timeframe?"
-        value={formData.timeframe || ''}
-        onChange={(value) => handleFieldChange('timeframe', value)}
-        options={[
-          { value: '3 months', label: '3 months — Quick transition' },
-          { value: '6 months', label: '6 months — Moderate pace' },
-          { value: '1 year', label: '1 year — Steady progression' },
-        ]}
-        error={errors.timeframe}
-        required
-      />
+        {/* Learning Style */}
+        <SelectField
+          id="learningStyle"
+          label="Preferred Strategy"
+          value={formData.learningStyle || ''}
+          onChange={(value) => handleFieldChange('learningStyle', value)}
+          options={[
+            { value: 'self-paced', label: 'Self-paced — Independent' },
+            { value: 'guided', label: 'Guided — Mentorship focused' },
+            { value: 'project-based', label: 'Project-based — Build focused' },
+          ]}
+          error={errors.learningStyle}
+          required
+        />
 
-      {/* Learning Style */}
-      <SelectField
-        id="learningStyle"
-        label="What is your preferred learning style?"
-        value={formData.learningStyle || ''}
-        onChange={(value) => handleFieldChange('learningStyle', value)}
-        options={[
-          { value: 'self-paced', label: 'Self-paced — Independent learning' },
-          { value: 'guided', label: 'Guided — Structured courses & mentorship' },
-          { value: 'project-based', label: 'Project-based — Learning by building' },
-        ]}
-        error={errors.learningStyle}
-        required
-      />
+        {/* Existing Skills */}
+        <TextAreaField
+          id="existingSkills"
+          label="Current Core Competencies"
+          placeholder="e.g., Python, SQL, Project Scoping..."
+          helperText="Briefly list your existing relevant skills."
+          value={formData.existingSkills || ''}
+          onChange={(value) => handleFieldChange('existingSkills', value)}
+          error={errors.existingSkills}
+          rows={3}
+        />
+      </div>
 
-      {/* Budget */}
-      <SelectField
-        id="budget"
-        label="Budget constraints (optional)"
-        value={formData.budget || 'medium'}
-        onChange={(value) => handleFieldChange('budget', value)}
-        options={[
-          { value: 'low', label: 'Low — Free resources only' },
-          { value: 'medium', label: 'Medium — Up to $50/month' },
-          { value: 'high', label: 'High — No budget limit' },
-        ]}
-      />
+      <div className="pt-4">
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          disabled={isLoading}
+          isLoading={isLoading}
+          className="w-full shadow-lg shadow-blue-500/20"
+          icon={
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          }
+        >
+          Generate Strategic Plan
+        </Button>
 
-      {/* Submit Button */}
-      <Button
-        type="submit"
-        variant="primary"
-        size="lg"
-        disabled={isLoading}
-        isLoading={isLoading}
-        className="w-full"
-      >
-        {isLoading ? 'Generating Plan...' : 'Generate Strategic Plan'}
-      </Button>
-
-      <p className="text-xs text-neutral-500 text-center">
-        Your plan will be generated using AI analysis of your inputs.
-      </p>
+        <p className="mt-4 text-[11px] text-slate-400 text-center uppercase tracking-widest font-medium">
+          Powered by Advanced Strategy Engine
+        </p>
+      </div>
     </form>
   );
 }
+

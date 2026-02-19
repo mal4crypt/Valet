@@ -13,10 +13,11 @@ interface InputFieldProps {
   error?: string;
   required?: boolean;
   disabled?: boolean;
+  helperText?: string;
 }
 
 /**
- * Reusable input field component with error handling
+ * Reusable input field component with premium SaaS styling
  */
 export function InputField({
   id,
@@ -28,12 +29,13 @@ export function InputField({
   error,
   required = false,
   disabled = false,
+  helperText,
 }: InputFieldProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-sm font-medium text-neutral-700">
+    <div className="flex flex-col gap-1.5 animate-in">
+      <label htmlFor={id} className="text-sm font-medium text-slate-700 ml-0.5">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="text-blue-500 ml-1 italic font-normal">(Required)</span>}
       </label>
       <input
         id={id}
@@ -43,15 +45,20 @@ export function InputField({
         onChange={(e) => onChange(type === 'number' ? parseInt(e.target.value) || 0 : e.target.value)}
         disabled={disabled}
         className={clsx(
-          'px-4 py-2 border rounded-lg transition-colors outline-none',
-          'focus:border-blue-500 focus:ring-1 focus:ring-blue-500',
-          'disabled:bg-neutral-100 disabled:cursor-not-allowed',
+          'px-4 py-2.5 bg-white border rounded-xl transition-all duration-200 outline-none',
+          'placeholder:text-slate-400 text-slate-900 text-base',
+          'focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:shadow-sm',
+          'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400',
           error
-            ? 'border-red-500 bg-red-50'
-            : 'border-neutral-300 bg-white hover:border-neutral-400'
+            ? 'border-red-500 bg-red-50 focus:ring-red-500/10'
+            : 'border-slate-200 shadow-sm hover:border-slate-300'
         )}
       />
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error ? (
+        <p className="text-xs text-red-600 mt-0.5 ml-1">{error}</p>
+      ) : helperText ? (
+        <p className="text-xs text-slate-400 mt-0.5 ml-1">{helperText}</p>
+      ) : null}
     </div>
   );
 }
@@ -65,10 +72,11 @@ interface SelectFieldProps {
   error?: string;
   required?: boolean;
   disabled?: boolean;
+  helperText?: string;
 }
 
 /**
- * Reusable select field component
+ * Reusable select field component with premium SaaS styling
  */
 export function SelectField({
   id,
@@ -79,35 +87,48 @@ export function SelectField({
   error,
   required = false,
   disabled = false,
+  helperText,
 }: SelectFieldProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-sm font-medium text-neutral-700">
+    <div className="flex flex-col gap-1.5 animate-in">
+      <label htmlFor={id} className="text-sm font-medium text-slate-700 ml-0.5">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="text-blue-500 ml-1 italic font-normal">(Required)</span>}
       </label>
-      <select
-        id={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        disabled={disabled}
-        className={clsx(
-          'px-4 py-2 border rounded-lg transition-colors outline-none',
-          'focus:border-blue-500 focus:ring-1 focus:ring-blue-500',
-          'disabled:bg-neutral-100 disabled:cursor-not-allowed',
-          error
-            ? 'border-red-500 bg-red-50'
-            : 'border-neutral-300 bg-white hover:border-neutral-400'
-        )}
-      >
-        <option value="">Select an option</option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      <div className="relative">
+        <select
+          id={id}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
+          className={clsx(
+            'w-full px-4 py-2.5 bg-white border rounded-xl transition-all duration-200 outline-none appearance-none',
+            'text-slate-900 text-base',
+            'focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:shadow-sm',
+            'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400',
+            error
+              ? 'border-red-500 bg-red-50 focus:ring-red-500/10'
+              : 'border-slate-200 shadow-sm hover:border-slate-300'
+          )}
+        >
+          <option value="" disabled>Select an option</option>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+      {error ? (
+        <p className="text-xs text-red-600 mt-0.5 ml-1">{error}</p>
+      ) : helperText ? (
+        <p className="text-xs text-slate-400 mt-0.5 ml-1">{helperText}</p>
+      ) : null}
     </div>
   );
 }
@@ -121,10 +142,11 @@ interface TextAreaFieldProps {
   error?: string;
   rows?: number;
   disabled?: boolean;
+  helperText?: string;
 }
 
 /**
- * Reusable textarea field component
+ * Reusable textarea field component with premium SaaS styling
  */
 export function TextAreaField({
   id,
@@ -135,10 +157,11 @@ export function TextAreaField({
   error,
   rows = 4,
   disabled = false,
+  helperText,
 }: TextAreaFieldProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-sm font-medium text-neutral-700">
+    <div className="flex flex-col gap-1.5 animate-in">
+      <label htmlFor={id} className="text-sm font-medium text-slate-700 ml-0.5">
         {label}
       </label>
       <textarea
@@ -149,15 +172,20 @@ export function TextAreaField({
         rows={rows}
         disabled={disabled}
         className={clsx(
-          'px-4 py-2 border rounded-lg transition-colors outline-none resize-none',
-          'focus:border-blue-500 focus:ring-1 focus:ring-blue-500',
-          'disabled:bg-neutral-100 disabled:cursor-not-allowed',
+          'px-4 py-2.5 bg-white border rounded-xl transition-all duration-200 outline-none resize-none',
+          'placeholder:text-slate-400 text-slate-900 text-base',
+          'focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:shadow-sm',
+          'disabled:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400',
           error
-            ? 'border-red-500 bg-red-50'
-            : 'border-neutral-300 bg-white hover:border-neutral-400'
+            ? 'border-red-500 bg-red-50 focus:ring-red-500/10'
+            : 'border-slate-200 shadow-sm hover:border-slate-300'
         )}
       />
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error ? (
+        <p className="text-xs text-red-600 mt-0.5 ml-1">{error}</p>
+      ) : helperText ? (
+        <p className="text-xs text-slate-400 mt-0.5 ml-1">{helperText}</p>
+      ) : null}
     </div>
   );
 }
@@ -166,15 +194,16 @@ interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   type?: 'button' | 'submit';
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   isLoading?: boolean;
   className?: string;
+  icon?: React.ReactNode;
 }
 
 /**
- * Reusable button component
+ * Reusable button component with premium SaaS styling
  */
 export function Button({
   children,
@@ -185,23 +214,26 @@ export function Button({
   disabled = false,
   isLoading = false,
   className,
+  icon,
 }: ButtonProps) {
   const baseStyles =
-    'font-medium rounded-lg transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2';
+    'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 outline-none focus:ring-4 disabled:cursor-not-allowed active:scale-[0.98]';
 
   const sizeStyles = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
+    sm: 'px-3.5 py-2 text-sm gap-1.5',
+    md: 'px-5 py-2.5 text-base gap-2',
+    lg: 'px-8 py-3.5 text-lg gap-2.5',
   };
 
   const variantStyles = {
     primary:
-      'bg-blue-600 text-white hover:bg-blue-700 disabled:bg-neutral-300 focus:ring-blue-500',
+      'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/20 disabled:bg-slate-200 disabled:text-slate-400 focus:ring-blue-500/20',
     secondary:
-      'bg-neutral-200 text-neutral-900 hover:bg-neutral-300 disabled:bg-neutral-300 focus:ring-neutral-500',
+      'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-900/20 disabled:bg-slate-200 disabled:text-slate-400 focus:ring-slate-900/20',
     outline:
-      'border-2 border-neutral-300 text-neutral-700 hover:bg-neutral-50 disabled:opacity-50 focus:ring-neutral-500',
+      'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 focus:ring-slate-500/10',
+    ghost:
+      'text-slate-600 hover:bg-slate-100 hover:text-slate-900 disabled:opacity-50 focus:ring-slate-500/10',
   };
 
   return (
@@ -213,17 +245,19 @@ export function Button({
         baseStyles,
         sizeStyles[size],
         variantStyles[variant],
-        disabled && 'cursor-not-allowed',
         className
       )}
     >
       {isLoading ? (
-        <span className="flex items-center gap-2">
-          <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-          Loading...
-        </span>
+        <>
+          <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          <span>Please wait...</span>
+        </>
       ) : (
-        children
+        <>
+          {icon && <span className="opacity-80">{icon}</span>}
+          {children}
+        </>
       )}
     </button>
   );
@@ -236,29 +270,44 @@ interface AlertProps {
 }
 
 /**
- * Alert component for displaying messages
+ * Alert component for displaying messages with premium SaaS styling
  */
 export function Alert({ variant, message, onClose }: AlertProps) {
   const variantStyles = {
-    error: 'bg-red-50 border-red-200 text-red-800',
-    success: 'bg-green-50 border-green-200 text-green-800',
-    info: 'bg-blue-50 border-blue-200 text-blue-800',
-    warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+    error: 'bg-red-50 border-red-100 text-red-800',
+    success: 'bg-emerald-50 border-emerald-100 text-emerald-800',
+    info: 'bg-blue-50 border-blue-100 text-blue-800',
+    warning: 'bg-amber-50 border-amber-100 text-amber-800',
   };
 
   return (
     <div
       className={clsx(
-        'border rounded-lg p-4 flex items-center justify-between',
+        'border rounded-xl p-4 flex items-start justify-between shadow-sm animate-in',
         variantStyles[variant]
       )}
       role="alert"
     >
-      <span>{message}</span>
+      <div className="flex gap-3">
+        <div className="mt-0.5">
+          {variant === 'error' && (
+            <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          )}
+          {variant === 'success' && (
+            <svg className="w-5 h-5 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          )}
+          {/* Add more icons as needed */}
+        </div>
+        <span className="text-sm font-medium leading-relaxed">{message}</span>
+      </div>
       {onClose && (
         <button
           onClick={onClose}
-          className="ml-4 text-current opacity-70 hover:opacity-100"
+          className="ml-4 p-1 rounded-lg hover:bg-black/5 transition-colors text-current opacity-60 hover:opacity-100"
           aria-label="Close alert"
         >
           ✕
@@ -269,21 +318,30 @@ export function Alert({ variant, message, onClose }: AlertProps) {
 }
 
 /**
- * Loading skeleton component
+ * Loading skeleton component with premium shimmer animation
  */
 export function SkeletonLoader() {
   return (
-    <div className="space-y-6 animate-pulse">
-      <div className="h-8 bg-neutral-200 rounded w-1/3" />
-      <div className="space-y-4">
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="space-y-2">
-            <div className="h-4 bg-neutral-200 rounded w-1/4" />
-            <div className="h-10 bg-neutral-200 rounded" />
+    <div className="space-y-8 animate-in">
+      <div className="space-y-3">
+        <div className="h-10 bg-slate-100 rounded-xl w-1/3 shimmer" />
+        <div className="h-4 bg-slate-100 rounded-full w-2/3 shimmer text-opacity-0" />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="space-y-4 p-6 border border-slate-100 rounded-xl bg-white shadow-sm">
+            <div className="h-3 bg-slate-100 rounded-full w-1/4 shimmer" />
+            <div className="space-y-2">
+              <div className="h-4 bg-slate-100 rounded-full w-full shimmer" />
+              <div className="h-4 bg-slate-100 rounded-full w-5/6 shimmer" />
+            </div>
           </div>
         ))}
       </div>
-      <div className="h-12 bg-neutral-200 rounded w-full" />
+
+      <div className="h-14 bg-slate-100 rounded-xl w-full shimmer" />
     </div>
   );
 }
+
