@@ -10,7 +10,7 @@ const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 
 interface LLMConfig {
-  provider: 'openai' | 'anthropic';
+  provider: 'openai' | 'anthropic' | 'google';
   apiKey: string;
   model: string;
 }
@@ -41,6 +41,16 @@ export function getLLMConfig(): LLMConfig {
       provider: 'anthropic',
       apiKey,
       model: process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022',
+    };
+  } else if (provider === 'google') {
+    const apiKey = process.env.GOOGLE_API_KEY;
+    if (!apiKey) {
+      throw new Error('GOOGLE_API_KEY environment variable is not set');
+    }
+    return {
+      provider: 'google',
+      apiKey,
+      model: process.env.GOOGLE_MODEL || 'gemini-1.5-flash',
     };
   }
 
@@ -137,6 +147,54 @@ async function callAnthropic(
 }
 
 /**
+ * Call Google Gemini API for plan generation
+ */
+async function callGoogle(
+  config: LLMConfig & { provider: 'google' },
+  prompt: string
+): Promise<string> {
+  const GOOGLE_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`;
+
+  const response = await fetch(GOOGLE_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            {
+              text: `${SYSTEM_PROMPT}\n\n${prompt}`,
+            },
+          ],
+        },
+      ],
+      generationConfig: {
+        response_mime_type: 'application/json',
+        temperature: 0.7,
+        max_output_tokens: 4000,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(`Google Gemini API error: ${error.error?.message || 'Unknown error'}`);
+  }
+
+  const data = await response.json();
+  const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+  if (!content) {
+    throw new Error('No content in Google Gemini response');
+  }
+
+  return content;
+}
+
+/**
  * Main function to generate strategic plan using LLM
  */
 export async function generateStrategicPlan(input: PlannerInput): Promise<StrategicPlan> {
@@ -153,9 +211,14 @@ export async function generateStrategicPlan(input: PlannerInput): Promise<Strate
         config as LLMConfig & { provider: 'openai' },
         prompt
       );
-    } else {
+    } else if (config.provider === 'anthropic') {
       llmResponse = await callAnthropic(
         config as LLMConfig & { provider: 'anthropic' },
+        prompt
+      );
+    } else {
+      llmResponse = await callGoogle(
+        config as LLMConfig & { provider: 'google' },
         prompt
       );
     }
