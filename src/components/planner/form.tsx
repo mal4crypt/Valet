@@ -22,17 +22,17 @@ interface PlannerFormProps {
 export function PlannerForm({ onSubmit, isLoading, error, onClearError }: PlannerFormProps) {
   const [formData, setFormData] = useState<Partial<PlannerInput>>({
     targetRole: '',
-    skillLevel: '',
+    skillLevel: undefined,
     existingSkills: '',
     weeklyHours: 0,
-    timeframe: '',
+    timeframe: undefined,
     budget: 'medium',
-    learningStyle: '',
+    learningStyle: undefined,
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof PlannerInput, string>>>({});
 
-  const handleFieldChange = (field: keyof PlannerInput, value: any) => {
+  const handleFieldChange = (field: keyof PlannerInput, value: string | number) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,

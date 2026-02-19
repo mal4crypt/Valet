@@ -166,8 +166,8 @@ export async function generateStrategicPlan(input: PlannerInput): Promise<Strate
       throw new Error('Failed to parse LLM response into valid plan');
     }
 
-    const processingTime = Date.now() - startTime;
-    console.log(`Plan generation completed in ${processingTime}ms`);
+    // const processingTime = Date.now() - startTime;
+    // console.log(`Plan generation completed in ${processingTime}ms`);
 
     return plan;
   } catch (error) {
